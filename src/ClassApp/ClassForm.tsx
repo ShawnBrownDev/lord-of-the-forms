@@ -1,153 +1,65 @@
-import React from "react";
-import InputField from "./InputField";
-import { UserInformation } from "../types";
-import { isEmailValid, isCityValid, isPhoneValid } from "../utils/validations";
-import { capitalize, formatPhone } from "../utils/transformations";
-import { ErrorMessage } from "../ErrorMessage"; 
+import { Component } from "react";
+import { ErrorMessage } from "../ErrorMessage";
 
-interface ClassFormProps {
-  onSubmit: (userInfo: UserInformation) => void;
-}
+const firstNameErrorMessage = "First name must be at least 2 characters long";
+const lastNameErrorMessage = "Last name must be at least 2 characters long";
+const emailErrorMessage = "Email is Invalid";
+const cityErrorMessage = "State is Invalid";
+const phoneNumberErrorMessage = "Invalid Phone Number";
 
-interface ClassFormState {
-  firstName: string;
-  lastName: string;
-  email: string;
-  city: string;
-  phone: string;
-  submittedOnce: boolean;
-  errors: {
-    firstName?: boolean;
-    lastName?: boolean;
-    email?: boolean;
-    city?: boolean;
-    phone?: boolean;
-  };
-}
-
-class ClassForm extends React.Component<ClassFormProps, ClassFormState> {
-  constructor(props: ClassFormProps) {
-    super(props);
-    this.state = {
-      firstName: "",
-      lastName: "",
-      email: "",
-      city: "",
-      phone: "",
-      submittedOnce: false,
-      errors: {},
-    };
-  }
-
-  handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-
-    this.setState((prevState) => ({
-      ...prevState,
-      [name]: value,
-      errors: { ...prevState.errors, [name]: false },
-    }));
-  };
-
-  handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const { firstName, lastName, email, city, phone } = this.state;
-
-    const errors: ClassFormState["errors"] = {};
-
-    if (firstName.length < 2 || /\d/.test(firstName)) errors.firstName = true;
-    if (lastName.length < 2 || /\d/.test(lastName)) errors.lastName = true;
-    if (!isEmailValid(email)) errors.email = true;
-    if (!isCityValid(city)) errors.city = true;
-    if (!isPhoneValid(phone) || phone.length !== 7) errors.phone = true;
-
-    if (Object.keys(errors).length > 0) {
-      this.setState({ submittedOnce: true, errors });
-      return;
-    }
-
-    const formattedPhone = formatPhone(phone);
-
-    this.props.onSubmit({
-      firstName: capitalize(firstName),
-      lastName: capitalize(lastName),
-      email,
-      city,
-      phone: formattedPhone,
-    });
-
-    this.setState({ submittedOnce: false, errors: {}, phone: "" });
-  };
-
+export class ClassForm extends Component {
   render() {
-    const { firstName, lastName, email, city, phone, submittedOnce, errors } =
-      this.state;
-
     return (
-      <form onSubmit={this.handleSubmit}>
+      <form>
         <u>
           <h3>User Information Form</h3>
         </u>
 
-        <InputField
-          label="First Name:"
-          name="firstName"
-          value={firstName}
-          onChange={this.handleChange}
-        />
-        <ErrorMessage
-          message="First name must be at least 2 characters long and should not contain numbers"
-          show={submittedOnce && !!errors.firstName}
-        />
+        {/* first name input */}
+        <div className="input-wrap">
+          <label>{"First Name"}:</label>
+          <input placeholder="Bilbo" />
+        </div>
+        <ErrorMessage message={firstNameErrorMessage} show={true} />
 
-        <InputField
-          label="Last Name:"
-          name="lastName"
-          value={lastName}
-          onChange={this.handleChange}
-        />
-        <ErrorMessage
-          message="Last name must be at least 2 characters long and should not contain numbers"
-          show={submittedOnce && !!errors.lastName}
-        />
+        {/* last name input */}
+        <div className="input-wrap">
+          <label>{"Last Name"}:</label>
+          <input placeholder="Baggins" />
+        </div>
+        <ErrorMessage message={lastNameErrorMessage} show={true} />
 
-        <InputField
-          label="Email:"
-          name="email"
-          value={email}
-          onChange={this.handleChange}
-        />
-        <ErrorMessage
-          message="Invalid email format"
-          show={submittedOnce && !!errors.email}
-        />
+        {/* Email Input */}
+        <div className="input-wrap">
+          <label>{"Email"}:</label>
+          <input placeholder="bilbo-baggins@adventurehobbits.net" />
+        </div>
+        <ErrorMessage message={emailErrorMessage} show={true} />
 
-        <InputField
-          label="City:"
-          name="city"
-          value={city}
-          onChange={this.handleChange}
-        />
-        <ErrorMessage
-          message="City is not valid"
-          show={submittedOnce && !!errors.city}
-        />
+        {/* City Input */}
+        <div className="input-wrap">
+          <label>{"City"}:</label>
+          <input placeholder="Hobbiton" />
+        </div>
+        <ErrorMessage message={cityErrorMessage} show={true} />
 
-        <InputField
-          label="Phone Number:"
-          name="phone"
-          value={phone}
-          onChange={this.handleChange}
-        />
-        <ErrorMessage
-          message="Phone number must be 7 digits"
-          show={submittedOnce && !!errors.phone}
-        />
+        <div className="input-wrap">
+          <label htmlFor="phone">Phone:</label>
+          <div id="phone-input-wrap">
+            <input type="text" id="phone-input-1" placeholder="55" />
+            -
+            <input type="text" id="phone-input-2" placeholder="55" />
+            -
+            <input type="text" id="phone-input-3" placeholder="55" />
+            -
+            <input type="text" id="phone-input-4" placeholder="5" />
+          </div>
+        </div>
+
+        <ErrorMessage message={phoneNumberErrorMessage} show={true} />
 
         <input type="submit" value="Submit" />
       </form>
     );
   }
 }
-
-export default ClassForm;
