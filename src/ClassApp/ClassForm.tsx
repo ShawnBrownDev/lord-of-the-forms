@@ -3,7 +3,7 @@ import InputField from "./InputField";
 import { UserInformation } from "../types";
 import { isEmailValid, isCityValid, isPhoneValid } from "../utils/validations";
 import { capitalize, formatPhone } from "../utils/transformations";
-import { ErrorMessage } from "../ErrorMessage";
+import { ErrorMessage } from "../ErrorMessage"; 
 
 interface ClassFormProps {
   onSubmit: (userInfo: UserInformation) => void;

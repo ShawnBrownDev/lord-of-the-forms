@@ -10,6 +10,11 @@ export const InfoRow = ({ label, value }: { label: string; value: string }) => {
     </div>
   );
 };
+
+const formatPhone = (phone: string) => {
+  return phone.replace(/(\d{2})(\d{2})(\d{2})(\d{1})/, "$1-$2-$3-$4");
+};
+
 export const ProfileInformation = ({
   userData,
 }: {
@@ -27,7 +32,9 @@ export const ProfileInformation = ({
       </>
     );
   }
+
   const { email, firstName, lastName, phone, city } = userData;
+  
   return (
     <>
       <u>
@@ -38,8 +45,8 @@ export const ProfileInformation = ({
         <InfoRow label="First Name" value={firstName} />
         <InfoRow label="Last Name" value={lastName} />
         <InfoRow label="City" value={city} />
-        {/* You will need to format the string "nnnnnnn" as "nn-nn-nn-n" */}
-        <InfoRow label="Phone" value={"12-34-56-7"} />
+        {/* Format phone number before displaying */}
+        <InfoRow label="Phone" value={formatPhone(phone)} />
       </div>
     </>
   );
